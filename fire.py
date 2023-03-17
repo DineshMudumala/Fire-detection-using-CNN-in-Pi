@@ -1,13 +1,6 @@
 import cv2
 import numpy as np
 import tensorflow as tf
-import RPi.GPIO as GPIO
-
-# Set up GPIO pins for the passive buzzer
-GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
-GPIO.setup(18, GPIO.OUT)
-buzzer = GPIO.PWM(18, 1000)
 
 # Load the TFLite model
 interpreter = tf.lite.Interpreter(model_path="fire_detection_model.tflite")
@@ -35,19 +28,14 @@ while True:
     
     # Check if fire is detected
     if output_data > 0.5:
-        # Activate the passive buzzer
-        buzzer.start(50)
-        buzzer.ChangeFrequency(2000)
         
         # Apply Gaussian filter to enhance the image
         frame = cv2.GaussianBlur(frame, (21, 21), 0)
-        
+       
         # Display the image
         cv2.imshow("Fire Detection", frame)
     else:
-        # Deactivate the passive buzzer
-        buzzer.stop()
-        
+           
         # Display the image
         cv2.imshow("Fire Detection", frame)
     
